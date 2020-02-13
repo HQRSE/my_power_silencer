@@ -94,7 +94,7 @@ $objXML = new CDataXML();
 echo "<pre>";
 print_r(ShowMeTheLoot($extraction));
 echo "</pre>";
-
+ 
 ?>
 
 </div>
