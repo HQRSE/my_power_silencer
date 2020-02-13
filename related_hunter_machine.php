@@ -7,94 +7,177 @@ $APPLICATION->SetTitle("related hunter");
 <div class="container related_hunter">
 
 <?
-$strQueryText = "/var/www/sibirix2/data/www/ohotaktiv.ru/obmen_files/folders/Related_folders_2.xml";
-$objXML = new CDataXML();
-    $objXML->Load($strQueryText);
-    $arData = $objXML->GetArray();
-	
+$glob = glob("/var/www/sibirix2/data/www/ohotaktiv.ru/obmen_files/folders/Related_goods_*.xml");
+
+foreach ($glob as $file) { 
+	//echo count($glob)."<br>";
+}
+
+echo "file_count: ".count($glob)."<br>";
+
+$file_count = 0;
+
+while (count($glob) > $file_count) {
+
+$q_file = $glob[$file_count];
+
+/* start bunny */
+$breed_of_bunny = $q_file;
+
+$carrot = new CDataXML();
+    $carrot->Load($breed_of_bunny);
+    $hide_in_the_woods = $carrot->GetArray();
+
 	/* start formatter level 1 */
-    $arResult = array();
-    foreach ($arData['items']['#']['item'] as $arValue) {
+    $bounce = array();
+    foreach ($hide_in_the_woods['items']['#']['item'] as $saw) {
         $ar = array();
-        foreach ($arValue['#'] as $sKey => $sVal) {
-            $ar[$sKey] = $sVal[0]['#'];
+        foreach ($saw['#'] as $iHide => $iEat) {
+            $ar[$iHide] = $iEat[0]['#'];
         }
-        $arResult[] = $ar;
+        $bounce[] = $ar;
     }
+
 	/* start formatter level 2 */
     $j = 0;
-    $sk = array();
 
-    foreach ($arResult as $qwe => $guid) {
+    foreach ($bounce as $jump => $hop) {
 
-        $id[$j]['guid_item'] = $guid['guid_item'];
-		//echo "item_guid: " . $id[$j]['guid_item'] . "<br>";
-
-        $i = 0;
-        while (count($guid['items_folders']['guid_folder']) > $i) {
-            $id[$j]['items_folders'][$i] = $guid['items_folders']['guid_folder'][$i]['#'];
-			//echo "item_folder_guid-".$i.": " . $id[$j]['items_folders'][$i] . "<br>";
-        $i++;
-		}
-
-		$t = 0;
-        while (count($guid['related_folders']['guid_folder']) > $t) {
-            $id[$j]['related_folders'][$t] = $guid['related_folders']['guid_folder'][$t]['#'];
-			//echo "related_folder_guid-".$t.": " . $id[$j]['related_folders'][$t] . "<br>";
+        $asylum_for_bunny[$j]['guid_item'] = $hop['guid_item'];
+		
+      	$t = 0;
+        while (count($hop['related_folders']['guid_folder']) > $t) {
+            $asylum_for_bunny[$j]['related_folders'][$t] = $hop['related_folders']['guid_folder'][$t]['#'];
 		$t++;
         }
     $j++;
     }
 
-	/* start formatter level 3 */
+	/* end formatter level 2 */
 
-	$k = 0;
-	$extraction = array();
-		foreach ($id as $bunny) {
-		$circle = 0;
-			/* check it */
-			while (count($bunny['related_folders']) > $circle && !empty($bunny['related_folders'][$circle])) {
-				foreach ($id as $dog) {
-					if (in_array($bunny['related_folders'][$circle], $dog['items_folders'])) {
-					//echo "for ".$bunny['guid_item']." related ".$dog['guid_item']."<br>";
-						/* ** */
-						/* *** */
-						$raw = $dog['guid_item'];
-						$saw = $bunny['guid_item'];
-						$results = $DB->Query("SELECT ID FROM b_iblock_element WHERE XML_ID='$raw' LIMIT 1");
-						while ($row = $results->Fetch())
-						{
-						$dog = $row['ID'];
-						}
-						$results = $DB->Query("SELECT ID FROM b_iblock_element WHERE XML_ID='$saw' LIMIT 1");
-						while ($row = $results->Fetch())
-						{
-						$bunny = $row['ID'];
-						}
-						/* *** */
-						/* ** */
- 					$extraction[$k] = array('guid' => $bunny, 'related' => $dog);
-					$k++;
-					}
-				}
-		$circle++;
-			}
-		}
-
-	/* * Show Me The Loot * */
-
-	function ShowMeTheLoot($extraction) {
-		$loot = array();
-		foreach ($extraction as $l) {
-		$loot[$l['guid']][] = $l['related'];
-  		}
-	 return $loot;
-	}
+/* start dog */
+$breed_of_dog = "/var/www/sibirix2/data/www/ohotaktiv.ru/obmen_files/folders/Related_folders_00.xml";
+$bone = new CDataXML();
+    $bone->Load($breed_of_dog);
+    $seek = $bone->GetArray();
 
 echo "<pre>";
-print_r(ShowMeTheLoot($extraction));
+//print_r($seek); 
 echo "</pre>";
- 
+	/* start formatter level 1 */
+    $sit = array();
+    foreach ($seek['related_folders']['#']['related_folder'] as $hide) {
+        $see_nothing = array();
+        foreach ($hide['#'] as $stun => $raw) {
+            $see_nothing[$stun] = $raw[0]['#'];
+        }
+        $sit[] = $see_nothing;
+    }
+
+
+
+	/* start formatter level 2 */
+    $u = 0;
+
+    foreach ($sit as $growl => $speed) {
+
+        $dog_loot[$u]['guid_folder'] = $speed['guid_folder'];
+        $f = 0;
+        while (count($speed['items']['item']) > $f) {
+            $dog_loot[$u]['items'][$f] = $speed['items']['item'][$f]['#']['guid_item'][0]['#'];
+        $f++;
+		}
+    $u++;
+    }
+
+	/* end formatter level 2 */
+$extraction = array();
+$k = 0;
+
+foreach ($asylum_for_bunny as $bunny => $bun) {
+
+
+	$pid = 0;
+
+	while (count($bun['related_folders']) > $pid) {
+
+	foreach ($dog_loot as $dog => $do) {
+
+		if ($bun['related_folders'][$pid] == $do['guid_folder']) { // Берет охуенно! Но есть несуществующие guid товаров,
+			//поэтому пустые там хуйни надо бы все + рандом каталога + рандом карточек
+
+	$res = CIBlockElement::GetList(array(), array('IBLOCK_ID' => 10, 'ACTIVE'=>'Y', 'XML_ID' => $bun['guid_item'], 'SITE_ID' => "s1"));
+        $item = $res->Fetch();
+
+		$col = 0;
+		while (count($do['items']) > $col) {
+
+			$mad_dog = $do['items'][$col];
+
+	$res2 = CIBlockElement::GetList(array(), array('IBLOCK_ID' => 10, 'ACTIVE'=>'Y', 'XML_ID' => $mad_dog, 'SITE_ID' => "s1"));
+        $item2 = $res2->Fetch();
+			if (!empty($item2)) {
+			$extraction[$k]['item'] = $item['ID'];
+			$extraction[$k]['related_items'][] = $item2["ID"];
+			}
+
+$col++;
+
+		}
+		
+		}
+
+	}
+
+	$pid++;
+
+	}
+
+	$k++;
+}
+
+while ($fruit_name = current($extraction)) {
+
+
+$i_id = $extraction[key($extraction)]['item'];
+	echo "<strong>i:</strong> ".$i_id.'<br />';
+$o = 0;
+$r_id = '';
+	while (count($extraction[key($extraction)]['related_items']) > $o) {
+		if ((count($extraction[key($extraction)]['related_items']) - 1) <> $o) {
+$r_id .= $extraction[key($extraction)]['related_items'][$o].", ";
+		} else {
+$r_id .= $extraction[key($extraction)]['related_items'][$o];
+		}
+/* *** */
+$ELEMENT_ID = $i_id;  // код элемента
+$PROPERTY_CODE = "related_sections";  // код свойства
+$PROPERTY_VALUE = $r_id;  // значение свойства
+// Установим новое значение для данного свойства данного элемента
+CIBlockElement::SetPropertyValuesEx($ELEMENT_ID, false, array($PROPERTY_CODE => $PROPERTY_VALUE));
+/* **** */
+$o++;
+	}
+	echo "<strong>rid:</strong> ".$r_id."<br>";
+
+    next($extraction);
+}
+
+/* ************************* */ 
+echo "all: ".count($extraction)."<br>";
+
+/* ************************* */ 
+
+$file_count++;
+
+}
+
+/* ************************* */ 
+
+echo "<pre>";
+print_r($extraction); 
+echo "</pre>";
+
 ?>
 
 </div>
