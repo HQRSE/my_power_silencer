@@ -1,7 +1,7 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/classes/general/xml.php');
-$APPLICATION->SetTitle("related hunter");
+$APPLICATION->SetTitle("related hunter machine");
 ?>
 
 <div class="container related_hunter">
